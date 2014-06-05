@@ -3,49 +3,19 @@ extends layoutEmpl
 block sigucaCSS
   link(rel='stylesheet', href='/stylesheets/sigucaEscritorio.css')
   link(rel='stylesheet', href='/stylesheets/jquery.tzineClock/jquery.tzineClock.css')
-  link(rel='stylesheet', href='/stylesheets/jquery.tzineClockstyles.css')
-  
-
 
 block imgSession
 block gcsNavbarItems
   ul.nav.navbar-nav
 block content
 
-  
   .container
+
     .col-xs-8
-      h3 Marcas Personales
+      button#verMarca.btn.btn-success Ver Marcas Personales
       
-      ol
-        if (!marca)
-         table.table.table-hover 
-
-          tr
-              td #Empl 
-              td Tipo Marca
-              td Dia
-              td mes
-              td Año
-              td Hora
-              td Minutos
-              td Segundos
-                          
-          each marca, i in marcas
-
-           if (marca.codTarjeta == usuario.codTarjeta) 
-            tr
-              td #{marca.codTarjeta}
-              td #{marca.tipoMarca}
-              td #{marca.dia}
-              td #{marca.mes}
-              td #{marca.ano}
-              td #{marca.hora}
-              td #{marca.minutos}
-              td #{marca.segundos}
-                     
-        else 
-          h1 no hay marcas registradas
+      div#marcas     
+        
             
     .col-xs-4
      h3 Eventos Pendientes   
@@ -122,4 +92,5 @@ block content
 block sigucaJS
   script(type='text/javascript', src='/javascripts/demo/jquery.tzineClock/jquery.tzineClock.js')
   script(type='text/javascript', src='/javascripts/demo/script.js')
+  script(type='text/javascript', src='/javascripts/escritorioEmpl.js')  
  
