@@ -6,45 +6,49 @@
  #* Copyright 2016 by Bradley Hidalgo Guzmán <bfhg.17@hotmail.com>
  #*
  #* This file is part of SIGUCA open source application.
- #* 
- #* SIGUCA open source application is free software: you can redistribute 
- #* it and/or modify it under the terms of the GNU Affero General Public 
- #* License as published by the Free Software Foundation, either 
+ #*
+ #* SIGUCA open source application is free software: you can redistribute
+ #* it and/or modify it under the terms of the GNU Affero General Public
+ #* License as published by the Free Software Foundation, either
  #* version 3 of the License, or (at your option) any later version.
- #* 
- #* SIGUCA open source application is distributed in the hope that it will 
- #* be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
+ #*
+ #* SIGUCA open source application is distributed in the hope that it will
+ #* be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  #* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  #* GNU Affero General Public License for more details.
- #* 
+ #*
  #* You should have received a copy of the GNU Affero General Public License
  #* along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  #*
- #* 
+ #*
  #*/
 
-import time 
+import time
 import os, sys
-import serial 
+import serial
 import subprocess
 import RPi.GPIO as GPIO
 from Tkinter import *
 from pymongo import MongoClient
 
-#SETTINGS AND CONFIGURATIONS
-#IP OF NODE JS SERVER WHERE SIGUCA IS RUNNING
-server_IP='10.42.30.13'
-#PORT OF THE MONGODB 
-port='27017'
-#PORT OF OF SIGUCA NODE JS PORT 
-app_Port='3000'
-#WE NEED TO SET A BROWSER TO SEND  POST ACTION TO THE NODE SERVER , SET IT UP HERE AS UNIX COMMAND
-browserSelection='curl'
-#ROUTE ON RASPBERRY PI WHERE IMAGE'S PATH  OF THE SERVER WAS MOUNTED, THROUGHT  NFS.
-#Ruta en la RaspberryPI donde esta montado el path de imagenes  del servidor a través de nfs.
-rutaImagenesPi= "/home/pi/Desktop/imgs/"
+config = {
+    # Config for a Siguca Pi node
+    # IP OF NODE JS SERVER WHERE SIGUCA IS RUNNING
+    server_IP="10.42.30.13"
+    #PORT OF THE MONGODB
+    mongo_Port="27017"
+    #PORT OF OF SIGUCA NODE JS PORT
+    sigucajs_Port="3000"
+    #WE NEED TO SET A BROWSER TO SEND  POST ACTION TO THE NODE SERVER , SET IT UP HERE AS UNIX COMMAND
+    browserSelection="curl"
+    #ROUTE ON RASPBERRY PI WHERE IMAGE'S PATH  OF THE SERVER WAS MOUNTED, THROUGHT  NFS.
+    #Ruta en la RaspberryPI donde esta montado el path de imagenes  del servidor a través de nfs.
+    rutaImagenesPi= "/home/pi/Desktop/imgs/"
+    siguca_Pwd1="ooKa6ieC&pwd2=of2Oobai"
+}
+
 #----------------------------------------------------------------------------------------------------------------------------------
-connection = MongoClient('mongodb://'+server_IP+':'+port)
+connection = MongoClient('mongodb://'+server_IP+':'+mongo_Port)
 
 #DATABASE CONNECTIONS.
 db = connection.sigucadb
@@ -53,35 +57,35 @@ codigosExistentes=list(collection.find({},{"codTarjeta": 1,"_id":0}))
 #Methods to define the timestamps thought the web browser
 def Entrada(dec):
     #These methods request a subprocess to execute a query to the ip and also the kind of timestamp
-    browser = subprocess.Popen([browserSelection, 'http://'+server_IP+':'+app_Port+'/rfidReader?pwd1=ooKa6ieC&pwd2=of2Oobai&codTarjeta='+dec+'&tipoMarca=1'])
+    browser = subprocess.Popen([browserSelection, 'http://'+server_IP+':'+sigucajs_Port+'/rfidReader?pwd1='+siguca_Pwd1+'&codTarjeta='+dec+'&tipoMarca=1'])
     #These sleeps are important and necessary to call the browser and execute the post.
     time.sleep(1)
-    #The the browser quits by itself and kill the frame. 
-    browser.terminate() 
+    #The the browser quits by itself and kill the frame.
+    browser.terminate()
     root.destroy()
 def SalidaReceso(dec):
-    browser = subprocess.Popen([browserSelection, 'http://'+server_IP+':'+app_Port+'/rfidReader?pwd1=ooKa6ieC&pwd2=of2Oobai&codTarjeta='+dec+'&tipoMarca=2'])
+    browser = subprocess.Popen([browserSelection, 'http://'+server_IP+':'+sigucajs_Port+'/rfidReader?pwd1='+siguca_Pwd1+'&codTarjeta='+dec+'&tipoMarca=2'])
     time.sleep(1)
     browser.terminate()
     root.destroy()
 
 def EntradaReceso(dec):
-    browser = subprocess.Popen([browserSelection, 'http://'+server_IP+':'+app_Port+'/rfidReader?pwd1=ooKa6ieC&pwd2=of2Oobai&codTarjeta='+dec+'&tipoMarca=3'])
+    browser = subprocess.Popen([browserSelection, 'http://'+server_IP+':'+sigucajs_Port+'/rfidReader?pwd1='+siguca_Pwd1+'&codTarjeta='+dec+'&tipoMarca=3'])
     time.sleep(1)
     browser.terminate()
     root.destroy()
 def SalidaAlmuerzo(dec):
-    browser = subprocess.Popen([browserSelection, 'http://'+server_IP+':'+app_Port+'/rfidReader?pwd1=ooKa6ieC&pwd2=of2Oobai&codTarjeta='+dec+'&tipoMarca=4'])
+    browser = subprocess.Popen([browserSelection, 'http://'+server_IP+':'+sigucajs_Port+'/rfidReader?pwd1='+siguca_Pwd1+'&codTarjeta='+dec+'&tipoMarca=4'])
     time.sleep(1)
     browser.terminate()
     root.destroy()
 def EntradaAlmuerzo(dec):
-    browser = subprocess.Popen([browserSelection, 'http://'+server_IP+':'+app_Port+'/rfidReader?pwd1=ooKa6ieC&pwd2=of2Oobai&codTarjeta='+dec+'&tipoMarca=5'])
+    browser = subprocess.Popen([browserSelection, 'http://'+server_IP+':'+sigucajs_Port+'/rfidReader?pwd1='+siguca_Pwd1+'&codTarjeta='+dec+'&tipoMarca=5'])
     time.sleep(1)
     browser.terminate()
     root.destroy()
 def Salida(dec):
-    browser = subprocess.Popen([browserSelection, 'http://'+server_IP+':'+app_Port+'/rfidReader?pwd1=ooKa6ieC&pwd2=of2Oobai&codTarjeta='+dec+'&tipoMarca=6'])
+    browser = subprocess.Popen([browserSelection, 'http://'+server_IP+':'+sigucajs_Port+'/rfidReader?pwd1='+siguca_Pwd1+'&codTarjeta='+dec+'&tipoMarca=6'])
     time.sleep(1)
     browser.terminate()
     root.destroy()
@@ -89,16 +93,16 @@ def Salida(dec):
 
 
 
- #Método principal de lectura para rfid.   
+ #Método principal de lectura para rfid.
 def read_rfid():
     #Excepcion para que no deje de escuchar si no encuentra  lectura .
     try:
         #Se inicializan las variables sin ningún contenido
-       
+
         print "Escuchando entradas..."
         data = None
-        ser = None   
-        
+        ser = None
+
         #Serial instance defines where its going constantly listen , you must set the baudrate in accordance to your own module to process the entry. 9600 to rdm 6300, also set the dev path. These ones are defaults:
 
         ser = serial.Serial(
@@ -106,18 +110,18 @@ def read_rfid():
         baudrate=9600)
         #ser =  sersial.Serial("/dev/ttyAMA0",timeout=60)
         #ser.baudrate= 9600
-       
-  #Lo que realiza este while es hacer que la instancia se ejecute siempre , entonces cada vez que 
-  #se ejecuta un método de los implementados al principio de este script , luego de cerrar el navegador y la instancia de la aplicación gráfica de python 
-  # volvería de nuevo a ejecutarse desde aquí permitiendo que se realize una y otra vez la verificacion de marcas RFID.     
-        while 1:   
-                #Cada vez que se hace la lectura se realiza un flush para evitar que el buffer almacene algún dato erroneo 
-                
+
+  #Lo que realiza este while es hacer que la instancia se ejecute siempre , entonces cada vez que
+  #se ejecuta un método de los implementados al principio de este script , luego de cerrar el navegador y la instancia de la aplicación gráfica de python
+  # volvería de nuevo a ejecutarse desde aquí permitiendo que se realize una y otra vez la verificacion de marcas RFID.
+        while 1:
+                #Cada vez que se hace la lectura se realiza un flush para evitar que el buffer almacene algún dato erroneo
+
                 #almacenamos en la variable data la lectura realizada de RFID
                 data=ser.read(15)
                 #print "Leyendo código :) , mantenga el identificador cerca del receptor"
                 #print "Espere..."
-                #flush a ser para no contener basura dentro de la variable 
+                #flush a ser para no contener basura dentro de la variable
                 #ser.flush()
                 #se cierra la conexión para dejar de escuchar
 
@@ -131,10 +135,10 @@ def read_rfid():
                 ParseId = [splitID[4],splitID[5],splitID[6],splitID[7],splitID[8],splitID[9]]
                 #los  unificamos  con el metodo join
                 result = ''.join(ParseId)
-                #lo convertimos a decimal 
+                #lo convertimos a decimal
                 dec = int(result, 16)
                 print dec
-                
+
                 #Se hace la validacion en el vector definido  por  la consulta a la base de datos al inicio de este archivo
                 for post in codigosExistentes:
                     if dec == post['codTarjeta']:
@@ -161,7 +165,7 @@ while 1:
         try:
             logo1 = PhotoImage(file=rutaImagenesPi+dec+".png")
             w2 = Label(root1, image=logo1).pack(side="top")
-        except: 
+        except:
             pass
         root1.after(2000, lambda: root1.destroy())
         root1.mainloop()
@@ -192,6 +196,6 @@ while 1:
         button5.grid(row=4,column=2)
 	button6.grid(row=5,columnspan=4)
 	root.mainloop()
-    else:  
+    else:
         os.system('clear')
-        pass 
+        pass
